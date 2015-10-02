@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python
 
 # -*- coding: utf-8 -*-
@@ -39,18 +38,19 @@ class Questions(Resource):
         '''
         Returns the remaining questions for the provided user.
         '''
-        with codecs.open('data.json', 'r', 'utf-8') as f:
-            questions = json.loads(f.read())
-        return questions
-    
+        if app.config['TESTING'] == True:
+            with codecs.open('data.json', 'r', 'utf-8') as f:
+                questions = json.loads(f.read())
+            return questions
+
     def put(self, username):
         '''
         TODO: communication with Mongo is probably needed here.
         '''
         args = parser.parse_args()
         print json.dumps(args, indent=4)
-        
-api.add_resource(Questions, '/questions/<string:username>')
+
+api.add_resource(Questions, '/user/quiz/<string:userid>')
 
 class User(Resource):
     def get(self, email):
