@@ -9,9 +9,10 @@ import os
 import sys
 import argparse
 import logging
+import codecs, json # for reading the mock data
 
 from flask import Flask, jsonify
-from flask_restful import Resource, Api
+from flask_restful import Resource, Api, reqparse
 
 __author__ = "Alexander O'Connor <Alexander.OConnor@dcu.ie>"
 __credits__ = ["Alexander O'Connor <Alexander.OConnor@dcu.ie>"]
@@ -22,16 +23,34 @@ __status__ = "Prototype"
 app = Flask(__name__)
 api = Api(app)
 
-class HelloWorld(Resource):
-    def get(self):
-        return {'hello':'hello','name':'world'}
+'''
+Argument parser. Used to parse the questions submission (PUT).
+'''
+parser = reqparse.RequestParser()
+parser.add_argument('question_id')
+parser.add_argument('answer_choice')
 
-class HelloName(Resource):
+class Questions(Resource):
+    '''An API class to handle questions for a specific user.
+    GET: retrieves the questions for the provided user.
+    PUT: stores the answers for the questions.
+    '''
     def get(self, username):
-        return {'hello':'hello', 'name': username}
-
-api.add_resource(HelloName, '/hello/<string:username>')
-api.add_resource(HelloWorld, '/hello')
+        '''
+        Returns the remaining questions for the provided user.
+        '''
+        with codecs.open('data.json', 'r', 'utf-8') as f:
+            questions = json.loads(f.read())
+        return questions
+    
+    def put(self, username):
+        '''
+        TODO: communication with Mongo is probably needed here.
+        '''
+        args = parser.parse_args()
+        print json.dumps(args, indent=4)
+        
+api.add_resource(Questions, '/questions/<string:username>')
 
 class User(Resource):
     def get(self, email):
