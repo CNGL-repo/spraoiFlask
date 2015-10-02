@@ -16,6 +16,8 @@ from flask_mail import Mail
 
 from spraoimail import send_email_report
 
+import spraoimongo
+
 __author__ = "Alexander O'Connor <Alexander.OConnor@dcu.ie>"
 __credits__ = ["Alexander O'Connor <Alexander.OConnor@dcu.ie>"]
 __version__ = "0.1"
@@ -88,12 +90,59 @@ class User(Resource):
                 response = {'completed':'True'}
             else:
                 response = {'completed' : 'False'}
-            return response
         else:
-            return {'error':'not implemented'}
-        return jsonify(hello='hello', name='world')
+            if mongoGetUser(email):
+                response = {'completed':'True'}
+            else:
+                response = {'completed':'False'}
+        return response
 
 api.add_resource(User, '/user/<string:email>')
+
+class Quiz(Resource):
+    def get(self):
+        if app.config['TESTING'] == True:
+            #Sorry for the broken formatting
+                questions = [{
+                    "answers": [
+                        {"0":"Not much, really."},
+                        {"1":"Oh, nothing interesting"},
+                        {"2":"Just wanted to say hi."},
+                        {"3":"There's no 4th answer."}
+                    ],
+                    "question_id": 1,
+                    "question_str": "What's up?",
+                    "correct_answer":"0"
+                    },
+                    {
+                    "answers": [
+                        {"0":"Man U."},
+                        {"1":"Barcelona."},
+                        {"2":"Bayern Munich."},
+                        {"3":"Liverpool."}
+                    ],
+                    "question_id": 2,
+                    "question_str": "What's your favorite team?",
+                    "correct_answer":"1"
+                    },
+                {
+                    "answers": [
+                        {"0","Dublin."},
+                        {"1","Galway."},
+                        {"2","Donegal."},
+                        {"3","Belfast."}
+                    ],
+                    "question_id": 2,
+                    "question_str": "What's your favorite city?",
+                    "correct_answer":"1"
+                    }
+                ]
+                response = questions
+        else:
+            response = spraoimongo.mongoGetQuestions()
+        return response
+
+api.add_resource(Quiz, '/questions')
 
 if __name__ == "__main__":
     app.run(debug=True)
