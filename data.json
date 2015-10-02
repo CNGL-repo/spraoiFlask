@@ -1,0 +1,32 @@
+[
+    {
+        "question_str": "What's up?",
+        "question_id": 1,
+        "answers": [
+            "Not much, really.",
+            "Oh, nothing interesting",
+            "Just wanted to say hi.",
+            "There's no 4th answer."
+        ]
+    },
+    {
+        "question_str": "What's your favorite team?",
+        "question_id": 2,
+        "answers": [
+            "Man U.",
+            "Barcelona.",
+            "Bayern Munich.",
+            "Liverpool."
+        ]
+    },
+    {
+        "question_str": "What's your favorite city?",
+        "question_id": 2,
+        "answers": [
+            "Dublin.",
+            "Galway.",
+            "Donegal.",
+            "Belfast."
+        ]
+    }
+]
